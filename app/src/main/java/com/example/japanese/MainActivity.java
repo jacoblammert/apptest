@@ -10,8 +10,6 @@ import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,12 +30,11 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         TextView textView = findViewById(R.id.textView);
-        textView.setText(getPackageCodePath());
 
 
-        data data = new data();
-        data.loadTables(context,"kanji.csv");
-        data.loadTables(context,"vocab.csv");
+        Data data = new Data();
+        data.loadKanji(context,"kanji.csv");
+        //data.loadVocabulary(context,"vocab.csv");
 
         Spinner dropdownmenu = (Spinner) findViewById(R.id.fontspinner);
 
@@ -75,11 +72,8 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                Toast.makeText(context,query,Toast.LENGTH_LONG).show();
-
-                String text = data.find(query.toString());
-                textView.setText(text);
+                String kanji_found = data.find_kanji(query);
+                textView.setText(Html.fromHtml(kanji_found));
 
                 return false;
             }
