@@ -1,9 +1,20 @@
 package com.example.japanese;
 
+import static com.example.japanese.MainActivity.context;
+
+import android.content.Context;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
+import android.text.style.RelativeSizeSpan;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -19,20 +30,20 @@ public class Kanji {
     private int level; // 1 - 4
 
     public static String color_kanji = Color.kanji.getColor();
-    public static String color_onyomi = Color.kanji.getColor();
-    public static String color_onyomi_romaji = Color.onyomi.getColor();
-    public static String color_kunyomi = Color.onyomi_romaji.getColor();
-    public static String color_kunyomi_romaji = Color.kunyomi.getColor();
-    public static String color_meaning = Color.kunyomi_romaji.getColor();
+    public static String color_onyomi = Color.onyomi.getColor();
+    public static String color_onyomi_romaji = Color.onyomi_romaji.getColor();
+    public static String color_kunyomi = Color.kunyomi.getColor();
+    public static String color_kunyomi_romaji = Color.kunyomi_romaji.getColor();
+    public static String color_meaning = Color.meaning.getColor();
     public static String color_level = Color.level.getColor();
 
-    public static String size_kanji = "big";
-    public static String size_onyomi = "small";
-    public static String size_onyomi_romaji = "small";
-    public static String size_kunyomi = "small";
-    public static String size_kunyomi_romaji = "small";
-    public static String size_meaning = "normal";
-    public static String size_level = "small";
+    public static float size_kanji = 2;
+    public static float size_onyomi = 1;
+    public static float size_onyomi_romaji = 1;
+    public static float size_kunyomi = 1;
+    public static float size_kunyomi_romaji = 1;
+    public static float size_meaning = 1.5f;
+    public static float size_level = 1;
 
     public Kanji() {
 
@@ -59,15 +70,67 @@ public class Kanji {
     }
 
     public Spanned toSpanned_colored() {
-        String text = "<font color=" + color_kanji          + "> <"+ size_kanji          + ">"+ kanji          + "</" + size_kanji          + "></font><br>"
-                + "<font color=" + color_onyomi         + "> <"+ size_onyomi         + ">"+ onyomi         + "</" + size_onyomi         + "></font><br>"
-                + "<font color=" + color_onyomi_romaji  + "> <"+ size_onyomi_romaji  + ">"+ onyomi_romaji  + "</" + size_onyomi_romaji  + "></font><br>"
-                + "<font color=" + color_kunyomi        + "> <"+ size_kunyomi        + ">"+ kunyomi        + "</" + size_kunyomi        + "></font><br>"
-                + "<font color=" + color_kunyomi_romaji + "> <"+ size_kunyomi_romaji + ">"+ kunyomi_romaji + "</" + size_kunyomi_romaji + "></font><br>"
-                + "<font color=" + color_meaning        + "> <"+ size_meaning        + ">"+ meaning        + "</" + size_meaning        + "></font><br>"
-                + "<font color=" + color_level          + "> <"+ size_level          + ">"+ level          + "</" + size_level          + "></font><br>";
-        return Html.fromHtml(text);
 
+        SpannableStringBuilder text = new SpannableStringBuilder();
+        text.append(getSpannedKanji());
+        text.append(getSpannedOnyomi());
+        text.append(getSpannedOnyomiRomaji());
+        text.append(getSpannedKunyomi());
+        text.append(getSpannedKunyomiRomaji());
+        text.append(getSpannedMeaning());
+        text.append(getSpannedLevel());
+        return text;
+
+    }
+
+    private SpannableString getSpannableString(String color, float size, String value){
+        SpannableString text = new SpannableString(value + " \n");
+
+        int index_position_start = 0;
+        int index_position_end = value.length();
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                System.out.println(value);
+                Toast.makeText(context,value,Toast.LENGTH_SHORT);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds){
+                super.updateDrawState(ds);
+                ds.setColor(android.graphics.Color.parseColor(color));
+                ds.setTextSize(size * 25 * context.getResources().getDisplayMetrics().scaledDensity);
+                ds.setUnderlineText(false);
+            }
+        };
+
+
+        text.setSpan(clickableSpan,index_position_start,index_position_end,SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return text;
+    }
+
+    private SpannableString getSpannedKanji(){
+        return getSpannableString(color_kanji,size_kanji,kanji);
+    }
+
+    private SpannableString getSpannedOnyomi(){
+        return getSpannableString(color_onyomi,size_onyomi,onyomi);
+    }
+    private SpannableString getSpannedOnyomiRomaji(){
+        return getSpannableString(color_onyomi_romaji,size_onyomi_romaji,onyomi_romaji);
+    }
+    private SpannableString getSpannedKunyomi(){
+        return getSpannableString(color_kunyomi,size_kunyomi,kunyomi);
+    }
+    private SpannableString getSpannedKunyomiRomaji(){
+        return getSpannableString(color_kunyomi_romaji,size_kunyomi_romaji,kunyomi_romaji);
+    }
+    private Spanned getSpannedMeaning(){
+        return getSpannableString(color_meaning,size_meaning,meaning);
+    }
+    private SpannableString getSpannedLevel(){
+        return getSpannableString(color_level,size_level,String.valueOf(level));
     }
 
     public boolean contains(String searchterm) {

@@ -83,12 +83,9 @@ public class Data {
 
     public Spanned find_kanji(String term) {
 
-        boolean found = false;
-
         SpannableStringBuilder result = new SpannableStringBuilder();
 
-        Spanned linebreak = Html.fromHtml("<br><br><br>");
-        //result.append(linebreak);
+        result.append("\n");
 
         ArrayList<Kanji> search_results = new ArrayList<>();
 
@@ -99,14 +96,12 @@ public class Data {
         }
         for (int i = 0; i < search_results.size()-1;++i) {
             result.append(search_results.get(i).toSpanned_colored());
-            result.append(Html.fromHtml("<br>"));
-        } // Only the last one will not have a <br> at the end
+            result.append("\n");
+        }
         try{
             result.append(search_results.get(search_results.size()-1).toSpanned_colored());
         }catch (Exception e){}
 
-        //result.append(linebreak);
-        //System.out.println(result);
         return result;
     }
 
