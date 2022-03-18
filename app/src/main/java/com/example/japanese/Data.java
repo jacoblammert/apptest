@@ -1,6 +1,10 @@
 package com.example.japanese;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,9 +38,9 @@ public class Data {
                 System.out.println(row);
 
                 int level = 0;
-                try{
+                try {
                     level = Integer.valueOf(row.get(7));
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -77,22 +81,33 @@ public class Data {
         }
     }
 
-    public String find_kanji(String term) {
+    public Spanned find_kanji(String term) {
 
         boolean found = false;
 
-        StringBuilder result = new StringBuilder();
+        SpannableStringBuilder result = new SpannableStringBuilder();
 
-        result.append("<br><br><br>");
+        Spanned linebreak = Html.fromHtml("<br><br><br>");
+        //result.append(linebreak);
+
+        ArrayList<Kanji> search_results = new ArrayList<>();
 
         for (int i = 0; i < data_kanji.size(); ++i) {
             if (data_kanji.get(i).contains(term)) {
-                result.append("\n\n").append(data_kanji.get(i).toString_colored());
+                search_results.add(data_kanji.get(i));
             }
         }
-        result.append("<br><br><br>");
-        System.out.println(result);
-        return result.toString();
+        for (int i = 0; i < search_results.size()-1;++i) {
+            result.append(search_results.get(i).toSpanned_colored());
+            result.append(Html.fromHtml("<br>"));
+        } // Only the last one will not have a <br> at the end
+        try{
+            result.append(search_results.get(search_results.size()-1).toSpanned_colored());
+        }catch (Exception e){}
+
+        //result.append(linebreak);
+        //System.out.println(result);
+        return result;
     }
 
 
