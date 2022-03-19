@@ -35,7 +35,6 @@ public class Data {
             for (int i = 1; i < array.length; ++i) {
                 ArrayList<String> row = new ArrayList<String>();
                 row.addAll(Arrays.asList(array[i].split(",")));
-                System.out.println(row);
 
                 int level = 0;
                 try {

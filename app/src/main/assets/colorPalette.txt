@@ -1,0 +1,20 @@
+0 #ff0034 kanji
+1 #734e55 onyomi
+2 #3d292d onyomi_romaji
+3 #6e2433 kunyomi
+4 #471821 kunyomi_romaji
+5 #368063 meaning
+6 #61543c level
+7 #161618 background
+8 #ff0034 button
+-
+0 #ffa600 kanji
+1 #736d4e onyomi
+2 #3d3b29 onyomi_romaji
+3 #6e5924 kunyomi
+4 #473718 kunyomi_romaji
+5 #478036 meaning
+6 #161618 level
+7 #212b2b background
+8 #ffa600 button
+-

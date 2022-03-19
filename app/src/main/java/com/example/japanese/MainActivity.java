@@ -1,5 +1,7 @@
 package com.example.japanese;
 
+import static com.example.japanese.ActivitySettings.bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
             "g_brushtappitsu_freeH.ttf",
             "g_brushtappitsu_freeR.ttf");
 
-    public static int current_activity_id;
-    public static Spanned current_search_result = null;
+    public static String searchterm = "---";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
 
-
         data = new Data();
         data.loadKanji(context, "kanji.csv");
         //data.loadVocabulary(context,"vocab.csv");
-
         activity_main();
 
     }
@@ -73,11 +72,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        text_main.setTypeface(typeface);
+        //typeface bundle.getString("text");
+        //text_main.setTypeface(typeface);
+        setColorPalette();
     }
 
     @Override
     protected void onPause() {
+        //bundle.putString("text",typeface);
         super.onPause();
     }
 
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         Search_main();
         Text_main();
         Settings();
+        setColorPalette();
     }
 
     public void Search_main() {
@@ -100,9 +103,8 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                current_search_result = data.find_kanji(query);
-                text_main.setText(current_search_result);
-                text_main.setMovementMethod(LinkMovementMethod.getInstance());
+                searchterm = query;
+                Text_main();
                 return false;
             }
 
@@ -117,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
         // Recreated when activity has been created or changed
         text_main = findViewById(R.id.textView);
 
+        Spanned current_search_result = data.find_kanji(searchterm);
         text_main.setText(current_search_result);
         text_main.setMovementMethod(LinkMovementMethod.getInstance());
+
         try {
             text_main.setTypeface(typeface);
         }catch (Exception e){}
@@ -132,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 /**/
     public void Settings() {
 
-        Button settings = findViewById(R.id.button_settings);
+        Button settings = findViewById(R.id.button_main_settings);
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +148,16 @@ public class MainActivity extends AppCompatActivity {
     }/**/
 
 
+    public void setColorPalette(){
+        Button settings = findViewById(R.id.button_main_settings);
+        settings.setBackgroundColor(Color.parseColor(com.example.japanese.Color.button.getColor()));
+
+        View background = findViewById(R.id.activity_main);
+        background.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.activity_background.getColor()));
+
+        // Updates Textcolor in the textview
+        Text_main();
+    }
 
 
 

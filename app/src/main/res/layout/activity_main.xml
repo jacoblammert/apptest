@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="#161618"
-    android:screenOrientation="portrait">
+    android:screenOrientation="portrait"
+    android:id="@+id/activity_main">
 
 
 
@@ -25,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.348"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_settings">
+        app:layout_constraintTop_toBottomOf="@+id/button_main_settings">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -56,7 +57,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_settings"
+        android:id="@+id/button_main_settings"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_marginTop="24dp"

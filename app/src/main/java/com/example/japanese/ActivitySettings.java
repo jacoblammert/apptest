@@ -14,10 +14,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.sun.jna.StringArray;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ActivitySettings extends AppCompatActivity {
 
     public static TextView text_settings_example;
-    public static Spinner dropdownmenu;
+    public static Spinner spinner_font;
+    public static Spinner spinner_palette;
+    public static String search_term_example = "Asia";
 
     public static Bundle bundle = new Bundle();
 
@@ -30,22 +38,28 @@ public class ActivitySettings extends AppCompatActivity {
 
         Text_settings_example();
         Settings();
-        Spinner();
+        Spinner_font();
+        Spinner_palette();
+        setColorPalette();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (dropdownmenu != null) {
-            dropdownmenu.setSelection(bundle.getInt("dropdownmenu", 0));
+        if (spinner_font != null) {
+            spinner_font.setSelection(bundle.getInt("spinner_font", 0));
+        }
+        if (spinner_palette != null) {
+            spinner_palette.setSelection(bundle.getInt("spinner_palette", 0));
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        bundle.putInt("dropdownmenu",dropdownmenu.getSelectedItemPosition());
+        bundle.putInt("spinner_font",spinner_font.getSelectedItemPosition());
+        bundle.putInt("spinner_palette",spinner_palette.getSelectedItemPosition());
     }
 
     @Override
@@ -54,17 +68,17 @@ public class ActivitySettings extends AppCompatActivity {
     }
 
 
-    public void Spinner() {
-        dropdownmenu = (Spinner) findViewById(R.id.fontspinner);
+    public void Spinner_font() {
+        spinner_font = (Spinner) findViewById(R.id.spinner_font);
 
 
         ArrayAdapter<String> font_adapter = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, fonts);
 
         font_adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
 
-        dropdownmenu.setAdapter(font_adapter);
+        spinner_font.setAdapter(font_adapter);
 
-        dropdownmenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_font.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + fonts.get(i));
@@ -79,11 +93,39 @@ public class ActivitySettings extends AppCompatActivity {
         });
     }
 
+
+    public void Spinner_palette() {
+        spinner_palette = (Spinner) findViewById(R.id.spinner_palette);
+
+        List<String> color_paletts = Arrays.asList("classic","original");
+
+        ArrayAdapter<String> palette_adapter = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, color_paletts);
+
+        palette_adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+
+        spinner_palette.setAdapter(palette_adapter);
+
+        spinner_palette.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loadColorPalette(i);
+                setColorPalette();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+
     public void Text_settings_example() {
         // Recreated when activity has been created or changed
         text_settings_example = findViewById(R.id.text_settings_example);
 
-        text_settings_example.setText(data.find_kanji("Asia"));
+        text_settings_example.setText(data.find_kanji(search_term_example));
 
         try {
             text_settings_example.setTypeface(typeface);
@@ -93,7 +135,7 @@ public class ActivitySettings extends AppCompatActivity {
 
     public void Settings() {
 
-        Button settings = findViewById(R.id.button_settings1);
+        Button settings = findViewById(R.id.button_settings_settings);
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,5 +147,22 @@ public class ActivitySettings extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void loadColorPalette(int number){
+        com.example.japanese.Color.loadColorpalette("colorPalette.txt",number);
+    }
+    public void setColorPalette(){
+        Button settings = findViewById(R.id.button_settings_settings);
+        settings.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.button.getColor()));
+
+        spinner_font.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.button.getColor()));
+        spinner_palette.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.button.getColor()));
+
+        View background = findViewById(R.id.activity_settings);
+        background.setBackgroundColor(android.graphics.Color.parseColor(Color.activity_background.getColor()));
+
+        // Updates example search term color palette
+        text_settings_example.setText(data.find_kanji(search_term_example));
     }
 }
