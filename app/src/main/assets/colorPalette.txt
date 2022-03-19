@@ -15,6 +15,28 @@
 4 #473718 kunyomi_romaji
 5 #478036 meaning
 6 #161618 level
-7 #212b2b background
+7 #101414 background
 8 #ffa600 button
+-
+
+0 #5b76c9 kanji
+1 #ffffff onyomi
+2 #ffffff onyomi_romaji
+3 #ffffff kunyomi
+4 #ffffff kunyomi_romaji
+5 #5bc97c meaning
+6 #ffffff level
+7 #000000 background
+8 #5b76c9 button
+-
+
+0 #ffffff kanji
+1 #ffffff onyomi
+2 #ffffff onyomi_romaji
+3 #ffffff kunyomi
+4 #ffffff kunyomi_romaji
+5 #ffffff meaning
+6 #ffffff level
+7 #000000 background
+8 #ffffff button
 -

@@ -5,6 +5,8 @@ import static com.example.japanese.MainActivity.*;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +21,8 @@ import com.sun.jna.StringArray;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.xml.parsers.SAXParser;
 
 public class ActivitySettings extends AppCompatActivity {
 
@@ -97,7 +101,7 @@ public class ActivitySettings extends AppCompatActivity {
     public void Spinner_palette() {
         spinner_palette = (Spinner) findViewById(R.id.spinner_palette);
 
-        List<String> color_paletts = Arrays.asList("classic","original");
+        List<String> color_paletts = Arrays.asList("classic","original","basic","standard");
 
         ArrayAdapter<String> palette_adapter = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, color_paletts);
 
@@ -120,12 +124,19 @@ public class ActivitySettings extends AppCompatActivity {
         });
     }
 
+    private Spanned getExample(){
+        try {
+            ArrayList<Kanji> found = data.find_kanji(search_term_example);
+            return found.get(0).toSpanned_colored();
+        }catch (Exception e){ }
+        return new SpannedString("Error");
+    }
 
     public void Text_settings_example() {
         // Recreated when activity has been created or changed
         text_settings_example = findViewById(R.id.text_settings_example);
 
-        text_settings_example.setText(data.find_kanji(search_term_example));
+        text_settings_example.setText(getExample());
 
         try {
             text_settings_example.setTypeface(typeface);
@@ -163,6 +174,7 @@ public class ActivitySettings extends AppCompatActivity {
         background.setBackgroundColor(android.graphics.Color.parseColor(Color.activity_background.getColor()));
 
         // Updates example search term color palette
-        text_settings_example.setText(data.find_kanji(search_term_example));
+        text_settings_example.setText(getExample());
+
     }
 }

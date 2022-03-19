@@ -14,8 +14,16 @@
 
 
 
-<!---->
-    <!---->
+    <Button
+        android:id="@+id/button_main_search"
+        android:layout_width="204dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="48dp"
+        android:text="Search"
+        app:layout_constraintBottom_toBottomOf="@+id/button_main_settings"
+        app:layout_constraintEnd_toStartOf="@+id/button_main_settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button_main_settings" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -42,19 +50,6 @@
                 android:textSize="36sp" />
         </LinearLayout>
     </ScrollView>
-
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="294dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="4dp"
-        android:addStatesFromChildren="false"
-        android:clickable="true"
-        app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.136"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_main_settings"

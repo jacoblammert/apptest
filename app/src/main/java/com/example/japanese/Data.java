@@ -80,11 +80,11 @@ public class Data {
         }
     }
 
-    public Spanned find_kanji(String term) {
+    public ArrayList<Kanji> find_kanji(String term) {
 
-        SpannableStringBuilder result = new SpannableStringBuilder();
+        //SpannableStringBuilder result = new SpannableStringBuilder();
 
-        result.append("\n");
+        //result.append("\n");
 
         ArrayList<Kanji> search_results = new ArrayList<>();
 
@@ -92,16 +92,16 @@ public class Data {
             if (data_kanji.get(i).contains(term)) {
                 search_results.add(data_kanji.get(i));
             }
-        }
+        }/*/
         for (int i = 0; i < search_results.size()-1;++i) {
             result.append(search_results.get(i).toSpanned_colored());
             result.append("\n");
         }
         try{
             result.append(search_results.get(search_results.size()-1).toSpanned_colored());
-        }catch (Exception e){}
+        }catch (Exception e){}/**/
 
-        return result;
+        return search_results;
     }
 
 

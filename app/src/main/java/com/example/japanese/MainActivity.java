@@ -34,7 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static TextView text_main;
-    public static SearchView searchView;
+    //public static SearchView searchView;
 
     public static Context context;
     public static Data data;
@@ -87,53 +87,24 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         Search_main();
-        Text_main();
+        //Text_main();
         Settings();
         setColorPalette();
     }
 
-    public void Search_main() {
+    private void Search_main() {
+        Button search = findViewById(R.id.button_main_search);
 
-        searchView = findViewById(R.id.searchView);
-        searchView.setDrawingCacheBackgroundColor(Color.BLACK);
-
-        searchView.setIconified(false);
-        searchView.clearFocus();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchterm = query;
-                Text_main();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-    }
-
-    public void Text_main(){
-        // Recreated when activity has been created or changed
-        text_main = findViewById(R.id.textView);
-
-        Spanned current_search_result = data.find_kanji(searchterm);
-        text_main.setText(current_search_result);
-        text_main.setMovementMethod(LinkMovementMethod.getInstance());
-
-        try {
-            text_main.setTypeface(typeface);
-        }catch (Exception e){}
-        text_main.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(context,view.)
+                Intent search = new Intent(context,ActivitySearch.class);
+                startActivity(search);
             }
         });
     }
-/**/
+
+
     public void Settings() {
 
         Button settings = findViewById(R.id.button_main_settings);
@@ -154,11 +125,5 @@ public class MainActivity extends AppCompatActivity {
 
         View background = findViewById(R.id.activity_main);
         background.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.activity_background.getColor()));
-
-        // Updates Textcolor in the textview
-        Text_main();
     }
-
-
-
 }
