@@ -165,13 +165,13 @@ public class ActivitySettings extends AppCompatActivity {
     }
     public void setColorPalette(){
         Button settings = findViewById(R.id.button_settings_settings);
-        settings.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.button.getColor()));
+        settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
 
-        spinner_font.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.button.getColor()));
-        spinner_palette.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.button.getColor()));
+        spinner_font.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
+        spinner_palette.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
 
         View background = findViewById(R.id.activity_settings);
-        background.setBackgroundColor(android.graphics.Color.parseColor(Color.activity_background.getColor()));
+        background.setBackgroundColor(Color.activity_background.getColorInt());
 
         // Updates example search term color palette
         text_settings_example.setText(getExample());

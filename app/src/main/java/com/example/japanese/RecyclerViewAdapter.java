@@ -32,21 +32,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //if (viewType == view_type_item) {
         return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false));
-        //}
-        /*/else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading,parent,false);
-            return new LoadingHolder(view);
-        }/**/
     }
-/*/
-    private void deleteItem(int position) {
-        item_row.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, item_row.size());
-        item_row.itemView.setVisibility(View.GONE);
-    }/**/
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
@@ -58,7 +45,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemViewType(int position) {
         return view_type_item;
-        //return itemlist.get(position) == null ? view_type_loading : view_type_item;
     }
 
     @Override
@@ -95,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(context,view.)
+                //view.setBackgroundColor(Color.kanji.getColorInt());
             }
         });
     }

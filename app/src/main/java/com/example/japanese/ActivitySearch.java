@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -37,50 +38,33 @@ public class ActivitySearch extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         recyclerView = findViewById(R.id.search_recycler_view);
 
-        System.out.println("set up adapter");
         resetRecyclerView();
 
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                if (!isloading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastVisibleItemPosition() > dataset.size() - 25) {
-
-                        //linearLayoutManager.removeViewAt();
-
-                        isloading = true;
-                        getMoreData();
-                    }
-                }
-            }
-        });
+        RecycleView();
         Search_main();
 
+        Settings();
+        setColorPalette();
     }
 
-    private void updateViewAdapter(int position){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColorPalette();
+    }
 
-
-
-
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void getMoreData() {
+        isloading = true;
 
         int size = dataset.size();
-
-        int number_new_items = 30;
+        int number_new_items = 10;
 
         for (int i = size; i < size + number_new_items; ++i) {
-            //dataset.add("Item " + i);
             if (i < current_search_result.size()) {
                 dataset.add(current_search_result.get(i).toSpanned_colored());
             }
@@ -96,9 +80,7 @@ public class ActivitySearch extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
     }
-    private void resetAdapter() {
 
-    }
     public void Search_main() {
 
         searchView = findViewById(R.id.search_view);
@@ -122,5 +104,50 @@ public class ActivitySearch extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void RecycleView(){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isloading) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastVisibleItemPosition() > dataset.size() - 25) {
+                        getMoreData();
+                    }
+                }
+            }
+        });
+    }
+    public void Settings(){
+
+        Button settings = findViewById(R.id.button_search_settings);
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent settings = new Intent(context,ActivitySettings.class);
+                startActivity(settings);
+            }
+        });
+    }
+
+    public void setColorPalette(){
+        resetRecyclerView();
+        current_search_result = data.find_kanji(searchterm);
+        getMoreData();
+
+        Button settings = findViewById(R.id.button_search_settings);
+        settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
+
+        recyclerView.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
+
+        searchView.setBackgroundColor(com.example.japanese.Color.meaning.getColorInt());
+
+        View background = findViewById(R.id.activity_search);
+        background.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
     }
 }

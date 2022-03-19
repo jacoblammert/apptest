@@ -72,6 +72,10 @@ public enum Color {
         return color;
     }
 
+    public int getColorInt() {
+        return android.graphics.Color.parseColor(color);
+    }
+
     public void setColor(String color) {
         this.color = color;
     }

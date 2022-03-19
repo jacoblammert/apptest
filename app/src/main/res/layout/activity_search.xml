@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#161618">
+    android:background="#161618"
+    android:id="@+id/activity_search">
 
     <Button
         android:id="@+id/button_search_settings"
@@ -18,9 +19,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler_view"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginTop="30sp"
+        android:layout_width="415dp"
+        android:layout_height="637dp"
         android:background="#161618"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,13 +29,15 @@
 
     <SearchView
         android:id="@+id/search_view"
-        android:layout_width="294dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="24dp"
         android:addStatesFromChildren="false"
         android:clickable="true"
         app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_search_settings"
         app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-
         data = new Data();
         data.loadKanji(context, "kanji.csv");
         //data.loadVocabulary(context,"vocab.csv");
@@ -72,14 +71,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //typeface bundle.getString("text");
-        //text_main.setTypeface(typeface);
         setColorPalette();
     }
 
     @Override
     protected void onPause() {
-        //bundle.putString("text",typeface);
         super.onPause();
     }
 
@@ -87,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         Search_main();
-        //Text_main();
         Settings();
         setColorPalette();
     }
@@ -116,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(settings);
             }
         });
-    }/**/
+    }
 
 
     public void setColorPalette(){
         Button settings = findViewById(R.id.button_main_settings);
-        settings.setBackgroundColor(Color.parseColor(com.example.japanese.Color.button.getColor()));
+        settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
 
         View background = findViewById(R.id.activity_main);
-        background.setBackgroundColor(android.graphics.Color.parseColor(com.example.japanese.Color.activity_background.getColor()));
+        background.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
     }
 }
