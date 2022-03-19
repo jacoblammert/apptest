@@ -45,14 +45,10 @@ public class MainActivity extends AppCompatActivity {
             "02UtsukushiMincho.ttf",
             "WaonJoyo-R.otf",
             "YasashisaGothicBold-V2.otf",
-            "SeimeiKana-Free.otf",
             "ryasumagoho.ttf",
             "SeiminKanaClassicTrial-ExtraLight.otf",
-            "g_brushtappitsu_freeB.ttf",
-            "g_brushtappitsu_freeH.ttf",
-            "g_brushtappitsu_freeR.ttf");
+            "g_brushtappitsu_freeB.ttf");
 
-    public static String searchterm = "---";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         data = new Data();
         data.loadKanji(context, "kanji.csv");
-        //data.loadVocabulary(context,"vocab.csv");
+        data.loadVocabulary(context,"vocab.csv");
         activity_main();
 
     }

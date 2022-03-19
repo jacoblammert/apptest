@@ -14,6 +14,7 @@ import java.util.*;
 public class Data {
 
     public ArrayList<Kanji> data_kanji;
+    public ArrayList<Vocabulary> data_vocabulary;
     public ArrayList<Kanji> data;
 
     public void data() {
@@ -69,22 +70,55 @@ public class Data {
             String[] array = new String(buffer).split("\n");
 
 
+            data_vocabulary = new ArrayList<>();
+
+            ArrayList<String> row = new ArrayList<String>();
+            ArrayList<String> previous_row = new ArrayList<String>();
+            for (int i = 1; i < array.length; ++i) {
+                row = new ArrayList<>();
+                row.addAll(Arrays.asList(array[i].split(",")));
+
+                boolean equal_rows = true;
+
+                for (int j = 1; j < row.size(); j++) {
+                    // The first entry is the number
+                    try {
+                        if (!row.get(j).equals(previous_row.get(j))) {
+                            equal_rows = false;
+                        }
+                    }catch (Exception e){
+                        equal_rows = false;
+                    }
+                }
+
+                if (!equal_rows) {
+                    data_vocabulary.add(new Vocabulary(
+                            row.get(1),
+                            row.get(2),
+                            row.get(3),
+                            row.get(4),
+                            row.get(5)));
+                }
+                previous_row = row;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void print(int table) {
+    public void printKanji() {
         for (int i = 0; i < data_kanji.size(); ++i) {
             System.out.println(data_kanji.get(i).toString());
         }
     }
 
+    public void printVocabulary() {
+        for (int i = 0; i < data_vocabulary.size(); ++i) {
+            System.out.println(data_vocabulary.get(i).toString());
+        }
+    }
+
     public ArrayList<Kanji> find_kanji(String term) {
-
-        //SpannableStringBuilder result = new SpannableStringBuilder();
-
-        //result.append("\n");
 
         ArrayList<Kanji> search_results = new ArrayList<>();
 
@@ -92,17 +126,20 @@ public class Data {
             if (data_kanji.get(i).contains(term)) {
                 search_results.add(data_kanji.get(i));
             }
-        }/*/
-        for (int i = 0; i < search_results.size()-1;++i) {
-            result.append(search_results.get(i).toSpanned_colored());
-            result.append("\n");
         }
-        try{
-            result.append(search_results.get(search_results.size()-1).toSpanned_colored());
-        }catch (Exception e){}/**/
-
         return search_results;
     }
 
+    public ArrayList<Vocabulary> find_vocabulary(String term) {
+
+        ArrayList<Vocabulary> search_results = new ArrayList<>();
+
+        for (int i = 0; i < data_vocabulary.size(); ++i) {
+            if (data_vocabulary.get(i).contains(term)) {
+                search_results.add(data_vocabulary.get(i));
+            }
+        }
+        return search_results;
+    }
 
 }

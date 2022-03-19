@@ -2,14 +2,11 @@ package com.example.japanese;
 
 import static com.example.japanese.MainActivity.context;
 import static com.example.japanese.MainActivity.data;
-import static com.example.japanese.MainActivity.searchterm;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.http.SslCertificate;
 import android.os.Bundle;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
@@ -20,20 +17,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ActivitySearch extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
-    public static SearchView searchView;
+    SearchView searchView;
 
     ArrayList<Spanned> dataset = new ArrayList<>();
+    ArrayList<Kanji> current_search_result_kanji = new ArrayList<>();
+    ArrayList<Vocabulary> current_search_result_vocabulary = new ArrayList<>();
+
     boolean isloading = false;
-    ArrayList<Kanji> current_search_result = new ArrayList<>();
+    boolean searchKanji_private = false;
+    public static boolean searchKanji_public = false;
+
+    public static String public_searchterm = "---";
+    String private_searchterm = "---";
+    public static boolean new_Search = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        private_searchterm = public_searchterm;
+        searchKanji_private = searchKanji_public;
 
         setContentView(R.layout.activity_search);
         recyclerView = findViewById(R.id.search_recycler_view);
@@ -44,6 +52,7 @@ public class ActivitySearch extends AppCompatActivity {
         Search_main();
 
         Settings();
+        SwitchSearch();
         setColorPalette();
     }
 
@@ -62,16 +71,22 @@ public class ActivitySearch extends AppCompatActivity {
         isloading = true;
 
         int size = dataset.size();
-        int number_new_items = 10;
+        int number_new_items = 150;
 
         for (int i = size; i < size + number_new_items; ++i) {
-            if (i < current_search_result.size()) {
-                dataset.add(current_search_result.get(i).toSpanned_colored());
+            if (searchKanji_private) {
+                if (i < current_search_result_kanji.size()) {
+                    dataset.add(current_search_result_kanji.get(i).toSpanned_colored());
+                }
+            } else {
+                if (i < current_search_result_vocabulary.size()) {
+                    dataset.add(current_search_result_vocabulary.get(i).toSpanned_colored());
+                }
             }
         }
         isloading = false;
     }
-    private void resetRecyclerView(){
+    private void resetRecyclerView() {
         dataset = new ArrayList<>();
         recyclerViewAdapter = new RecyclerViewAdapter(dataset, context);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -92,10 +107,9 @@ public class ActivitySearch extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                resetRecyclerView();
-                searchterm = query;
-                current_search_result = data.find_kanji(searchterm);
-                getMoreData();
+                public_searchterm = query;
+                private_searchterm = public_searchterm;
+                Search(public_searchterm);
                 return false;
             }
 
@@ -106,7 +120,7 @@ public class ActivitySearch extends AppCompatActivity {
         });
     }
 
-    public void RecycleView(){
+    public void RecycleView() {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -115,30 +129,44 @@ public class ActivitySearch extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                 if (!isloading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastVisibleItemPosition() > dataset.size() - 25) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastVisibleItemPosition() > dataset.size() - 100) {
                         getMoreData();
                     }
                 }
             }
         });
     }
-    public void Settings(){
+
+    public void Settings() {
 
         Button settings = findViewById(R.id.button_search_settings);
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent settings = new Intent(context,ActivitySettings.class);
+                Intent settings = new Intent(context, ActivitySettings.class);
                 startActivity(settings);
             }
         });
     }
 
-    public void setColorPalette(){
-        resetRecyclerView();
-        current_search_result = data.find_kanji(searchterm);
-        getMoreData();
+    public void SwitchSearch() {
+
+        Button settings = findViewById(R.id.button_search_switch);
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchKanji_private = !searchKanji_private;
+                searchKanji_public = searchKanji_private;
+                resetRecyclerView();
+                getMoreData();
+            }
+        });
+    }
+
+    public void setColorPalette() {
+        Search(private_searchterm);
 
         Button settings = findViewById(R.id.button_search_settings);
         settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
@@ -149,5 +177,13 @@ public class ActivitySearch extends AppCompatActivity {
 
         View background = findViewById(R.id.activity_search);
         background.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
+    }
+
+    public void Search(String searchterm) {
+        resetRecyclerView();
+        //if (searchKanji){
+        current_search_result_kanji = data.find_kanji(searchterm);
+        current_search_result_vocabulary = data.find_vocabulary(searchterm);
+        getMoreData();
     }
 }
