@@ -17,7 +17,8 @@ public enum Color {
     meaning("#368063"),
     level("#61543c"),
     activity_background("#161618"),
-    button("#ff0034");
+    button("#ff0034"),
+    search("#ff0034");
 
 
     private String color;
@@ -83,7 +84,7 @@ public enum Color {
     public static void printColors(){
         System.out.println("Color Palette: ");
         for (Color color: Color.values()){
-            System.out.println(color.getColor());
+            System.out.println(color.color + " " + color.getColor());
         }
     }
 }

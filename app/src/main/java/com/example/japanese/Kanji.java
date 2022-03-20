@@ -5,14 +5,19 @@ import static com.example.japanese.MainActivity.context;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.MaskFilter;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextPaint;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
+import android.text.style.MaskFilterSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Toast;
 
@@ -67,6 +72,7 @@ public class Kanji {
     public Spanned toSpanned_colored() {
 
         SpannableStringBuilder text = new SpannableStringBuilder();
+        text.append("\n");
         text.append(getSpannedKanji());
         text.append("\n");
         text.append(getSpannedOnyomi());
@@ -82,10 +88,31 @@ public class Kanji {
         text.append(getSpannedLevel());
         text.append("\n");
         return text;
+    }
+
+    public Spanned toSpanned_colored(String searchterm) {
+
+        SpannableStringBuilder text = new SpannableStringBuilder();
+        text.append("\n");
+        text.append(getSpannedKanji(searchterm));
+        text.append("\n");
+        text.append(getSpannedOnyomi(searchterm));
+        text.append("\n");
+        text.append(getSpannedOnyomiRomaji(searchterm));
+        text.append("\n");
+        text.append(getSpannedKunyomi(searchterm));
+        text.append("\n");
+        text.append(getSpannedKunyomiRomaji(searchterm));
+        text.append("\n");
+        text.append(getSpannedMeaning(searchterm));
+        text.append("\n");
+        text.append(getSpannedLevel(searchterm));
+        text.append("\n");
+        return text;
 
     }
 
-    private SpannableString getSpannableString(String color, float size, String value) {
+    private SpannableString getSpannableString(int color, float size, String value) {
         SpannableString text = new SpannableString(value);
 
         int index_position_start = 0;
@@ -105,7 +132,7 @@ public class Kanji {
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
-                ds.setColor(android.graphics.Color.parseColor(color));
+                ds.setColor(color);
                 ds.setTextSize(size * 25 * context.getResources().getDisplayMetrics().scaledDensity);
                 ds.setUnderlineText(false);
             }
@@ -117,32 +144,121 @@ public class Kanji {
         return text;
     }
 
+    private SpannableString getSpannableString(int color, float size, String value, String searchterm) {
+
+        if (!value.contains(searchterm)) {
+            return getSpannableString(color, size, value);
+        }
+
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+
+        if (value.startsWith(searchterm)){
+            spannableStringBuilder.append(getSearchString(color,size,searchterm));
+        }
+        String[] split_value = value.split(searchterm);
+
+        for (int i = 0; i < split_value.length; ++i) {
+            System.out.println(split_value[i]);
+        }
+
+        for (int i = 0; i < split_value.length; ++i) {
+
+            SpannableString substring = new SpannableString(split_value[i]);
+
+            int index_position_start = 0;
+            int index_position_end = split_value[i].length();
+
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View view) {
+                    public_searchterm = value;
+                    new_Search = true;
+                    searchKanji_public = false;
+                    Intent search = new Intent(context, ActivitySearch.class);
+                    search.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(search);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setColor(color);
+                    ds.setTextSize(size * 25 * context.getResources().getDisplayMetrics().scaledDensity);
+                    ds.setUnderlineText(false);
+                }
+            };
+
+            substring.setSpan(clickableSpan, index_position_start, index_position_end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannableStringBuilder.append(substring);
+            if (i < split_value.length - 1 || value.endsWith(searchterm)) {
+                spannableStringBuilder.append(getSearchString(color,size,searchterm));
+            }
+
+        }
+        return SpannableString.valueOf(spannableStringBuilder);
+    }
+
+    private SpannableString getSearchString(int color,float size, String searchterm){
+        SpannableString result = getSpannableString(color, size, searchterm);
+        result.setSpan(new StyleSpan(Typeface.BOLD),0,result.length(),0);
+        return result;
+    }
+    private SpannableString getSpannedKanji(String searchterm) {
+        return getSpannableString(Color.kanji.getColorInt(), size_kanji, kanji, searchterm);
+    }
+
+    private SpannableString getSpannedOnyomi(String searchterm) {
+        return getSpannableString(Color.onyomi.getColorInt(), size_onyomi, onyomi, searchterm);
+    }
+
+    private SpannableString getSpannedOnyomiRomaji(String searchterm) {
+        return getSpannableString(Color.onyomi_romaji.getColorInt(), size_onyomi_romaji, onyomi_romaji, searchterm);
+    }
+
+    private SpannableString getSpannedKunyomi(String searchterm) {
+        return getSpannableString(Color.kunyomi.getColorInt(), size_kunyomi, kunyomi, searchterm);
+    }
+
+    private SpannableString getSpannedKunyomiRomaji(String searchterm) {
+        return getSpannableString(Color.kunyomi_romaji.getColorInt(), size_kunyomi_romaji, kunyomi_romaji, searchterm);
+    }
+
+    private Spanned getSpannedMeaning(String searchterm) {
+        return getSpannableString(Color.meaning.getColorInt(), size_meaning, meaning, searchterm);
+    }
+
+    private SpannableString getSpannedLevel(String searchterm) {
+        return getSpannableString(Color.level.getColorInt(), size_level, String.valueOf(level), searchterm);
+    }
+
     private SpannableString getSpannedKanji() {
-        return getSpannableString(Color.kanji.getColor(), size_kanji, kanji);
+        return getSpannableString(Color.kanji.getColorInt(), size_kanji, kanji);
     }
 
     private SpannableString getSpannedOnyomi() {
-        return getSpannableString(Color.onyomi.getColor(), size_onyomi, onyomi);
+        return getSpannableString(Color.onyomi.getColorInt(), size_onyomi, onyomi);
     }
 
     private SpannableString getSpannedOnyomiRomaji() {
-        return getSpannableString(Color.onyomi_romaji.getColor(), size_onyomi_romaji, onyomi_romaji);
+        return getSpannableString(Color.onyomi_romaji.getColorInt(), size_onyomi_romaji, onyomi_romaji);
     }
 
     private SpannableString getSpannedKunyomi() {
-        return getSpannableString(Color.kunyomi.getColor(), size_kunyomi, kunyomi);
+        return getSpannableString(Color.kunyomi.getColorInt(), size_kunyomi, kunyomi);
     }
 
     private SpannableString getSpannedKunyomiRomaji() {
-        return getSpannableString(Color.kunyomi_romaji.getColor(), size_kunyomi_romaji, kunyomi_romaji);
+        return getSpannableString(Color.kunyomi_romaji.getColorInt(), size_kunyomi_romaji, kunyomi_romaji);
     }
 
     private Spanned getSpannedMeaning() {
-        return getSpannableString(Color.meaning.getColor(), size_meaning, meaning);
+        return getSpannableString(Color.meaning.getColorInt(), size_meaning, meaning);
     }
 
     private SpannableString getSpannedLevel() {
-        return getSpannableString(Color.level.getColor(), size_level, String.valueOf(level));
+        return getSpannableString(Color.level.getColorInt(), size_level, String.valueOf(level));
     }
 
     public boolean contains(String searchterm) {

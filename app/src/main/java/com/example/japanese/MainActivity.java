@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.fonts.Font;
 import android.os.Bundle;
@@ -41,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
     public static Typeface typeface;
     public static List<String> fonts = Arrays.asList(
             //TODO load from resource file
+            "1",
+            "2",
+            "3",
+            "3",
+            "4",
+            "5",
             "ipaexm.ttf",
             "02UtsukushiMincho.ttf",
             "WaonJoyo-R.otf",
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         data = new Data();
         data.loadKanji(context, "kanji.csv");
         data.loadVocabulary(context,"vocab.csv");
+        Color.loadColorpalette("colorPalette.txt",0);
         activity_main();
 
     }

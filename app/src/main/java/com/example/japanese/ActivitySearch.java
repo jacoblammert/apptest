@@ -3,13 +3,18 @@ package com.example.japanese;
 import static com.example.japanese.MainActivity.context;
 import static com.example.japanese.MainActivity.data;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Spanned;
+import android.text.SpannedString;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +26,7 @@ import java.util.ArrayList;
 public class ActivitySearch extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
+    RecyclerView.Adapter adapter;
     SearchView searchView;
 
     ArrayList<Spanned> dataset = new ArrayList<>();
@@ -46,6 +52,7 @@ public class ActivitySearch extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         recyclerView = findViewById(R.id.search_recycler_view);
 
+
         resetRecyclerView();
 
         RecycleView();
@@ -54,12 +61,17 @@ public class ActivitySearch extends AppCompatActivity {
         Settings();
         SwitchSearch();
         setColorPalette();
+
+        recyclerView.getAdapter().setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+        recyclerView.getAdapter().setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.ALLOW);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        int old_scroll_pos = recyclerViewAdapter.lastPosition;
         setColorPalette();
+        recyclerView.scrollToPosition(old_scroll_pos-1);
     }
 
     @Override
@@ -76,11 +88,13 @@ public class ActivitySearch extends AppCompatActivity {
         for (int i = size; i < size + number_new_items; ++i) {
             if (searchKanji_private) {
                 if (i < current_search_result_kanji.size()) {
-                    dataset.add(current_search_result_kanji.get(i).toSpanned_colored());
+                    //dataset.add(current_search_result_kanji.get(i).toSpanned_colored());
+                    dataset.add(current_search_result_kanji.get(i).toSpanned_colored(private_searchterm));
                 }
             } else {
                 if (i < current_search_result_vocabulary.size()) {
-                    dataset.add(current_search_result_vocabulary.get(i).toSpanned_colored());
+                    //dataset.add(current_search_result_vocabulary.get(i).toSpanned_colored());
+                    dataset.add(current_search_result_vocabulary.get(i).toSpanned_colored(private_searchterm));
                 }
             }
         }
@@ -110,6 +124,7 @@ public class ActivitySearch extends AppCompatActivity {
                 public_searchterm = query;
                 private_searchterm = public_searchterm;
                 Search(public_searchterm);
+                updateSearchFont();
                 return false;
             }
 
@@ -132,6 +147,9 @@ public class ActivitySearch extends AppCompatActivity {
                     if (linearLayoutManager != null && linearLayoutManager.findLastVisibleItemPosition() > dataset.size() - 100) {
                         getMoreData();
                     }
+                }
+                if (linearLayoutManager != null) {
+                    recyclerViewAdapter.updatePosition(linearLayoutManager.findLastVisibleItemPosition());
                 }
             }
         });
@@ -157,10 +175,14 @@ public class ActivitySearch extends AppCompatActivity {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchKanji_private = !searchKanji_private;
-                searchKanji_public = searchKanji_private;
-                resetRecyclerView();
-                getMoreData();
+                if (searchKanji_public) {
+                    searchKanji_public = !searchKanji_public;
+                    Intent settings = new Intent(context, ActivitySearch.class);
+                    startActivity(settings);
+                }else{
+                    searchKanji_public = !searchKanji_public;
+                    finish();
+                }
             }
         });
     }
@@ -171,12 +193,17 @@ public class ActivitySearch extends AppCompatActivity {
         Button settings = findViewById(R.id.button_search_settings);
         settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
 
+        Button search_switch = findViewById(R.id.button_search_switch);
+        search_switch.setBackgroundColor(com.example.japanese.Color.search.getColorInt());
+
         recyclerView.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
 
         searchView.setBackgroundColor(com.example.japanese.Color.meaning.getColorInt());
 
         View background = findViewById(R.id.activity_search);
         background.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
+
+        updateSearchFont();
     }
 
     public void Search(String searchterm) {
@@ -185,5 +212,19 @@ public class ActivitySearch extends AppCompatActivity {
         current_search_result_kanji = data.find_kanji(searchterm);
         current_search_result_vocabulary = data.find_vocabulary(searchterm);
         getMoreData();
+    }
+
+    public void updateSearchFont(){
+        TextView textViewSearch = findViewById(R.id.search_current_search);
+        String text = private_searchterm;
+
+        if (searchKanji_private) {
+            text += " 漢字";
+        }else {
+            text += " 単語";
+        }
+        textViewSearch.setText(text);
+        textViewSearch.setTextSize(TypedValue.COMPLEX_UNIT_SP,40);
+        textViewSearch.setTextColor(com.example.japanese.Color.search.getColorInt());
     }
 }

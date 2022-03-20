@@ -39,7 +39,6 @@ public class ActivitySettings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
 
-
         Text_settings_example();
         Settings();
         Spinner_font();
@@ -62,8 +61,8 @@ public class ActivitySettings extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        bundle.putInt("spinner_font",spinner_font.getSelectedItemPosition());
-        bundle.putInt("spinner_palette",spinner_palette.getSelectedItemPosition());
+        bundle.putInt("spinner_font", spinner_font.getSelectedItemPosition());
+        bundle.putInt("spinner_palette", spinner_palette.getSelectedItemPosition());
     }
 
     @Override
@@ -85,9 +84,30 @@ public class ActivitySettings extends AppCompatActivity {
         spinner_font.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + fonts.get(i));
-                text_settings_example.setTypeface(typeface);
-
+                switch (i) {
+                    case 1:
+                        text_settings_example.setTypeface(Typeface.DEFAULT);
+                        break;
+                    case 2:
+                        text_settings_example.setTypeface(Typeface.DEFAULT_BOLD);
+                        break;
+                    case 3:
+                        text_settings_example.setTypeface(Typeface.MONOSPACE);
+                        break;
+                    case 4:
+                        text_settings_example.setTypeface(Typeface.SANS_SERIF);
+                        break;
+                    case 5:
+                        text_settings_example.setTypeface(Typeface.SERIF);
+                        break;
+                    default:
+                        try {
+                            typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + fonts.get(i));
+                            text_settings_example.setTypeface(typeface);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                }
             }
 
             @Override
@@ -101,7 +121,7 @@ public class ActivitySettings extends AppCompatActivity {
     public void Spinner_palette() {
         spinner_palette = (Spinner) findViewById(R.id.spinner_palette);
 
-        List<String> color_paletts = Arrays.asList("classic","original","basic","standard");
+        List<String> color_paletts = Arrays.asList("classic", "original", "basic", "standard");
 
         ArrayAdapter<String> palette_adapter = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, color_paletts);
 
@@ -124,11 +144,12 @@ public class ActivitySettings extends AppCompatActivity {
         });
     }
 
-    private Spanned getExample(){
+    private Spanned getExample() {
         try {
             ArrayList<Kanji> found = data.find_kanji(search_term_example);
             return found.get(0).toSpanned_colored();
-        }catch (Exception e){ }
+        } catch (Exception e) {
+        }
         return new SpannedString("Error");
     }
 
@@ -160,10 +181,11 @@ public class ActivitySettings extends AppCompatActivity {
         });
     }
 
-    public void loadColorPalette(int number){
-        com.example.japanese.Color.loadColorpalette("colorPalette.txt",number);
+    public void loadColorPalette(int number) {
+        com.example.japanese.Color.loadColorpalette("colorPalette.txt", number);
     }
-    public void setColorPalette(){
+
+    public void setColorPalette() {
         Button settings = findViewById(R.id.button_settings_settings);
         settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
 

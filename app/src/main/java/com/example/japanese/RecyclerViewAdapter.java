@@ -21,7 +21,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     final int view_type_item = 1;
     public List<Spanned> itemlist;
     Context context;
-    //int lastPosition = -1;
+    public int lastPosition = 0;
 
     public RecyclerViewAdapter(List<Spanned> itemlist, Context context) {
         this.itemlist = itemlist;
@@ -61,6 +61,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             textView = itemView.findViewById(R.id.row_text);
         }
+    }
+
+    public void updatePosition(int newPos){
+        lastPosition = newPos;
     }
 
     private class LoadingHolder extends RecyclerView.ViewHolder {
