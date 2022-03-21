@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static Context context;
     public static Data data;
+    public static Color color;
     public static Typeface typeface;
     public static List<String> fonts = Arrays.asList(
             //TODO load from resource file
@@ -65,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
         data = new Data();
         data.loadKanji(context, "kanji.csv");
         data.loadVocabulary(context,"vocab.csv");
-        Color.loadColorpalette("colorPalette.txt",0);
+        color = new Color();
+        color.loadColorpaletts("colorPalette.txt");
+
         activity_main();
 
     }
@@ -118,9 +121,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void setColorPalette(){
         Button settings = findViewById(R.id.button_main_settings);
-        settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
+        settings.setBackgroundColor(color.getColorInt(0,8));
 
         View background = findViewById(R.id.activity_main);
-        background.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
+        background.setBackgroundColor(color.getColorInt(0,7));
+
     }
 }

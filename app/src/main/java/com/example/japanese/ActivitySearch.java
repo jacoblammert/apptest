@@ -2,6 +2,7 @@ package com.example.japanese;
 
 import static com.example.japanese.MainActivity.context;
 import static com.example.japanese.MainActivity.data;
+import static com.example.japanese.MainActivity.typeface;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -30,12 +31,12 @@ public class ActivitySearch extends AppCompatActivity {
     SearchView searchView;
 
     ArrayList<Spanned> dataset = new ArrayList<>();
-    ArrayList<Kanji> current_search_result_kanji = new ArrayList<>();
-    ArrayList<Vocabulary> current_search_result_vocabulary = new ArrayList<>();
+    ArrayList<DataEntry> current_search_result_kanji = new ArrayList<>();
+    ArrayList<DataEntry> current_search_result_vocabulary = new ArrayList<>();
 
     boolean isloading = false;
     boolean searchKanji_private = false;
-    public static boolean searchKanji_public = false;
+    public static boolean searchKanji_public = true;
 
     public static String public_searchterm = "---";
     String private_searchterm = "---";
@@ -88,12 +89,10 @@ public class ActivitySearch extends AppCompatActivity {
         for (int i = size; i < size + number_new_items; ++i) {
             if (searchKanji_private) {
                 if (i < current_search_result_kanji.size()) {
-                    //dataset.add(current_search_result_kanji.get(i).toSpanned_colored());
                     dataset.add(current_search_result_kanji.get(i).toSpanned_colored(private_searchterm));
                 }
             } else {
                 if (i < current_search_result_vocabulary.size()) {
-                    //dataset.add(current_search_result_vocabulary.get(i).toSpanned_colored());
                     dataset.add(current_search_result_vocabulary.get(i).toSpanned_colored(private_searchterm));
                 }
             }
@@ -191,17 +190,17 @@ public class ActivitySearch extends AppCompatActivity {
         Search(private_searchterm);
 
         Button settings = findViewById(R.id.button_search_settings);
-        settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
+        settings.setBackgroundColor(MainActivity.color.getColorInt(0,8));
 
         Button search_switch = findViewById(R.id.button_search_switch);
-        search_switch.setBackgroundColor(com.example.japanese.Color.search.getColorInt());
+        search_switch.setBackgroundColor(MainActivity.color.getColorInt(0,9));
 
-        recyclerView.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
+        recyclerView.setBackgroundColor(MainActivity.color.getColorInt(0,7));
 
-        searchView.setBackgroundColor(com.example.japanese.Color.meaning.getColorInt());
+        searchView.setBackgroundColor(MainActivity.color.getColorInt(0,5));
 
         View background = findViewById(R.id.activity_search);
-        background.setBackgroundColor(com.example.japanese.Color.activity_background.getColorInt());
+        background.setBackgroundColor(MainActivity.color.getColorInt(0,7));
 
         updateSearchFont();
     }
@@ -209,8 +208,8 @@ public class ActivitySearch extends AppCompatActivity {
     public void Search(String searchterm) {
         resetRecyclerView();
         //if (searchKanji){
-        current_search_result_kanji = data.find_kanji(searchterm);
-        current_search_result_vocabulary = data.find_vocabulary(searchterm);
+        current_search_result_kanji = data.findEntry(searchterm,0);
+        current_search_result_vocabulary = data.findEntry(searchterm,1);
         getMoreData();
     }
 
@@ -225,6 +224,7 @@ public class ActivitySearch extends AppCompatActivity {
         }
         textViewSearch.setText(text);
         textViewSearch.setTextSize(TypedValue.COMPLEX_UNIT_SP,40);
-        textViewSearch.setTextColor(com.example.japanese.Color.search.getColorInt());
+        textViewSearch.setTextColor(MainActivity.color.getColorInt(0,9));
+        textViewSearch.setTypeface(typeface);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.japanese;
 
 import static com.example.japanese.MainActivity.*;
+import static com.example.japanese.Color.*;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -86,18 +87,23 @@ public class ActivitySettings extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case 1:
+                        typeface = Typeface.DEFAULT;
                         text_settings_example.setTypeface(Typeface.DEFAULT);
                         break;
                     case 2:
+                        typeface = Typeface.DEFAULT_BOLD;
                         text_settings_example.setTypeface(Typeface.DEFAULT_BOLD);
                         break;
                     case 3:
+                        typeface = Typeface.MONOSPACE;
                         text_settings_example.setTypeface(Typeface.MONOSPACE);
                         break;
                     case 4:
+                        typeface = Typeface.SANS_SERIF;
                         text_settings_example.setTypeface(Typeface.SANS_SERIF);
                         break;
                     case 5:
+                        typeface = Typeface.SERIF;
                         text_settings_example.setTypeface(Typeface.SERIF);
                         break;
                     default:
@@ -145,10 +151,14 @@ public class ActivitySettings extends AppCompatActivity {
     }
 
     private Spanned getExample() {
+        System.out.println("Searching Exampletext");
+
+        ArrayList<DataEntry> found = data.findEntry(search_term_example,0); // TODO set enum for datatype
+        System.out.println(found.size());
         try {
-            ArrayList<Kanji> found = data.find_kanji(search_term_example);
             return found.get(0).toSpanned_colored();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return new SpannedString("Error");
     }
@@ -182,18 +192,19 @@ public class ActivitySettings extends AppCompatActivity {
     }
 
     public void loadColorPalette(int number) {
-        com.example.japanese.Color.loadColorpalette("colorPalette.txt", number);
+        active_color_palette = number;
+        //color.loadColorpaletts("colorPalette.txt");
     }
 
     public void setColorPalette() {
         Button settings = findViewById(R.id.button_settings_settings);
-        settings.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
+        settings.setBackgroundColor(color.getColorInt(0,8));
 
-        spinner_font.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
-        spinner_palette.setBackgroundColor(com.example.japanese.Color.button.getColorInt());
+        spinner_font.setBackgroundColor(color.getColorInt(0,8));
+        spinner_palette.setBackgroundColor(color.getColorInt(0,8));
 
         View background = findViewById(R.id.activity_settings);
-        background.setBackgroundColor(Color.activity_background.getColorInt());
+        background.setBackgroundColor(color.getColorInt(0,7));
 
         // Updates example search term color palette
         text_settings_example.setText(getExample());
